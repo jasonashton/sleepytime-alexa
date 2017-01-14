@@ -5,7 +5,7 @@ from flask_ask import Ask, request, session, question, statement
 app = Flask(__name__)
 ask = Ask(app, '/')
 
-def getTimeToWake(cycles=6):
+def getTimeToWake(cycles):
     hoursOfSleep = 1.5 * cycles
 
     currentTime = datetime.datetime.now()
@@ -21,11 +21,12 @@ def launch():
     speech_text = 'Welcome to the SleepyTime App. Repeat wakeup times'
     return question(speech_text)
 
-@ask.intent('WakeupIntent')
-def wakeup():
-    wakeupTime = getTimeToWake()
-    return statement('<speak>Wake up at {}<break strength="medium"/>{:02d} tomorrow</speak>'.\
-            format(wakeupTime.hour, wakeupTime.minute))
+@ask.intent('WakeupIntent', convert={'cycles': int})
+def wakeup(cycles=6):
+    wakeupTime = getTimeToWake(cycles)
+    return statement('<speak>For {} cycles wake up at {}\
+            <break strength="medium"/>{:02d} tomorrow</speak>'.\
+            format(cycles, wakeupTime.hour, wakeupTime.minute))
 
 @ask.session_ended
 def session_ended():
