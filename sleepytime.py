@@ -21,12 +21,23 @@ def launch():
     speech_text = 'Welcome to the SleepyTime App. Repeat wakeup times'
     return question(speech_text)
 
-@ask.intent('WakeupIntent', convert={'cycles': int})
-def wakeup(cycles=6):
-    wakeupTime = getTimeToWake(cycles)
-    return statement('<speak>For {} cycles wake up at {}\
-            <break strength="medium"/>{:02d} tomorrow</speak>'.\
-            format(cycles, wakeupTime.hour, wakeupTime.minute))
+@ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': None})
+def wakeup(cycles=0):
+    cycleList = []
+    outputString = '<speak>'
+    if cycles is None:
+        cycleList = [5, 6]
+    else:
+        cycleList = [cycles]
+    for i in cycleList:
+        wakeupTime = getTimeToWake(i)
+        outputString += 'For {} cycles wake up at {}'\
+            '<break strength="medium"/>{:02d} tomorrow'\
+            '<break strength="strong"/>'\
+            .format(i, wakeupTime.hour, wakeupTime.minute)
+
+    outputString += '</speak>' 
+    return statement(outputString)
 
 @ask.session_ended
 def session_ended():
