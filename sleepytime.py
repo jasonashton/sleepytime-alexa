@@ -81,5 +81,5 @@ def session_ended():
     return "", 200;
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=443, debug=True)
+    app.run(debug=True)
 
