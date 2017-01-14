@@ -38,7 +38,7 @@ def wakeup(cycles):
     for i in cycleList:
         wakeupTime = getFinalTime(i, 1)
 
-        hour = datetime.datetime.strftime(wakeupTime, "%I")
+        hour = datetime.datetime.strftime(wakeupTime, "%-I")
         minute = datetime.datetime.strftime(wakeupTime, "%M")
 
         outputString += 'For {} cycles wake up at {}'\
@@ -52,17 +52,22 @@ def wakeup(cycles):
 @ask.intent('SleepIntent', convert={'timeSleep': 'time'})
 def timeToSleep(timeSleep):
     outputString = '<speak>'
+
+    if 'timeSleep' in convert_errors:
+        return question("Please repeat your request")
+
     timeSleep = datetime.datetime.combine(datetime.date.today(), timeSleep)
+    for i in [5, 6]:
+  
+        timeToSleep = getFinalTime(i, -1, timeSleep)
 
-    timeToSleep = getFinalTime(6, -1, timeSleep)
+        hour = datetime.datetime.strftime(timeToSleep, "%-I")
+        minute = datetime.datetime.strftime(timeToSleep, "%M")
 
-    hour = datetime.datetime.strftime(timeToSleep, "%I")
-    minute = datetime.datetime.strftime(timeToSleep, "%M")
-
-    outputString += 'For {} cycles sleep at {}'\
+        outputString += 'For {} cycles sleep at {}'\
             '<break strength="medium"/>{} tonight'\
             '<break strength="strong"/>'\
-            .format(6, hour, minute)
+            .format(i, hour, minute)
 
 
 
