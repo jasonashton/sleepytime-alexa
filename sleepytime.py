@@ -1,6 +1,6 @@
 import datetime
 from flask import Flask, render_template
-from flask_ask import Ask, request, session, question, statement
+from flask_ask import Ask, convert_errors, request, session, question, statement
 
 app = Flask(__name__)
 ask = Ask(app, '/')
@@ -25,9 +25,15 @@ def launch():
 def wakeup(cycles=0):
     cycleList = []
     outputString = '<speak>'
+
+    if 'cycles' in convert_errors:
+        return question("Please repeat your request")
+
     if cycles is None:
         cycleList = [5, 6]
     else:
+        if cycles > 23:
+            cycles = 23
         cycleList = [cycles]
     for i in cycleList:
         wakeupTime = getTimeToWake(i)
