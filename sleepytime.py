@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3.4
 
-import datetime
+import datetime, os
 from flask import Flask, render_template
 from flask_ask import Ask, convert_errors, request, session, question, statement
 
@@ -82,5 +82,5 @@ def session_ended():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(hot='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
 
