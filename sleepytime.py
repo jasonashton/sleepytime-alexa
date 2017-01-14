@@ -5,16 +5,16 @@ from flask_ask import Ask, convert_errors, request, session, question, statement
 app = Flask(__name__)
 ask = Ask(app, '/')
 
-def getTimeToWake(cycles):
+#direction indicates counting forward or back. 1 for forward, -1 for back
+def getFinalTime(cycles, direction, startTime=None):
     hoursOfSleep = 1.5 * cycles
-
-    currentTime = datetime.datetime.now()
+    if startTime is None:
+        startTime = datetime.datetime.now()
     timeDelta = datetime.timedelta(hours=hoursOfSleep, minutes=14)
 
-    wakeupTime = currentTime + timeDelta
+    finalTime = startTime + (direction * timeDelta)
 
-    return wakeupTime
-
+    return finalTime
 
 @ask.launch
 def launch():
@@ -22,7 +22,7 @@ def launch():
     return question(speech_text)
 
 @ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': None})
-def wakeup(cycles=0):
+def wakeup(cycles):
     cycleList = []
     outputString = '<speak>'
 
@@ -36,13 +36,37 @@ def wakeup(cycles=0):
             cycles = 23
         cycleList = [cycles]
     for i in cycleList:
-        wakeupTime = getTimeToWake(i)
+        wakeupTime = getFinalTime(i, 1)
+
+        hour = datetime.datetime.strftime(wakeupTime, "%I")
+        minute = datetime.datetime.strftime(wakeupTime, "%M")
+
         outputString += 'For {} cycles wake up at {}'\
-            '<break strength="medium"/>{:02d} tomorrow'\
+            '<break strength="medium"/>{} tomorrow'\
             '<break strength="strong"/>'\
-            .format(i, wakeupTime.hour, wakeupTime.minute)
+            .format(i, hour, minute)
 
     outputString += '</speak>' 
+    return statement(outputString)
+
+@ask.intent('SleepIntent', convert={'timeSleep': 'time'})
+def timeToSleep(timeSleep):
+    outputString = '<speak>'
+    timeSleep = datetime.datetime.combine(datetime.date.today(), timeSleep)
+
+    timeToSleep = getFinalTime(6, -1, timeSleep)
+
+    hour = datetime.datetime.strftime(timeToSleep, "%I")
+    minute = datetime.datetime.strftime(timeToSleep, "%M")
+
+    outputString += 'For {} cycles sleep at {}'\
+            '<break strength="medium"/>{} tonight'\
+            '<break strength="strong"/>'\
+            .format(6, hour, minute)
+
+
+
+    outputString += '</speak>'
     return statement(outputString)
 
 @ask.session_ended
