@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3.4
+
 import datetime
 from flask import Flask, render_template
 from flask_ask import Ask, convert_errors, request, session, question, statement
