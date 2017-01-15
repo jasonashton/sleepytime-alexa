@@ -41,10 +41,11 @@ def limitCycles(cyclesIn):
 
 @ask.launch
 def launch():
-    speech_text = 'Welcome to the SleepyTime App. Please ask'\
-                    'for the time to wake up if you sleep now'\
-                    'or ask for what time to sleep if you for'\
-                    'a wakeup time'
+    speech_text = '<speak>Welcome to SleepyTime. Please say you are going'\
+                    'to sleep now'\
+                    '<break strength="medium" />or<break strength="medium"/>'\
+                    'say the time you are waking up.'\
+                    'you may also specify the number of sleep cycles</speak>'
     return question(speech_text)
 
 #INTENDED IF SLEEPING NOW
@@ -64,7 +65,7 @@ def wakeup(cycles):
         hour = datetime.datetime.strftime(wakeupTime, "%-I")
         minute = datetime.datetime.strftime(wakeupTime, "%M")
 
-        outputString += 'For {} cycles wake up at {}'\
+        outputString += 'For {} sleep cycles wake up at {}'\
             '<break strength="medium"/>{} {}'\
             '<break strength="strong"/>'\
             .format(i, hour, minute, getTimeOfDay(wakeupTime))
@@ -95,7 +96,7 @@ def timeToSleep(timeAwake, cycles):
         sleepHour = datetime.datetime.strftime(timeToSleep, "%-I")
         sleepMinute = datetime.datetime.strftime(timeToSleep, "%M")
 
-        outputString += 'For {} cycles go to bed at {}'\
+        outputString += 'For {} sleep cycles go to bed at {}'\
             '<break strength="medium"/>{} {} to wake up at'\
             '{}<break strength="medium"/>{}<break strength="strong"/>'\
             .format(i, sleepHour, sleepMinute, getTimeOfDay(timeToSleep), wakeHour, wakeMinute)
