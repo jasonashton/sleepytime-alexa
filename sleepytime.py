@@ -28,6 +28,17 @@ def getTimeOfDay(time):
         timeOfDay = 'at night'
     return timeOfDay
 
+def limitCycles(cyclesIn):
+    cycleList = []
+    if cyclesIn <= 0:
+        cycleList = [5, 6]
+    elif cyclesIn > 23:
+        cycleList = [23]
+    else:
+        cycleList = [cyclesIn]
+    return cycleList
+
+
 @ask.launch
 def launch():
     speech_text = 'Welcome to the SleepyTime App. Please ask'\
@@ -36,6 +47,7 @@ def launch():
                     'a wakeup time'
     return question(speech_text)
 
+#INTENDED IF SLEEPING NOW
 @ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': 0})
 def wakeup(cycles):
     cycleList = []
@@ -44,12 +56,8 @@ def wakeup(cycles):
     if convert_errors or not isinstance(cycles, int):
         return question("Please repeat your request")
 
-    if cycles == 0:
-        cycleList = [5, 6]
-    else:
-        if cycles > 23:
-            cycles = 23
-        cycleList = [cycles]
+    cycleList = limitCycles(cycles)
+
     for i in cycleList:
         wakeupTime = getFinalTime(i, 1)
 
@@ -64,26 +72,33 @@ def wakeup(cycles):
     outputString += '</speak>' 
     return statement(outputString)
 
-@ask.intent('SleepIntent', convert={'timeSleep': 'time'})
-def timeToSleep(timeSleep):
+#INTENDED IF YOU KNOW WHEN YOU'RE WAKING UP
+@ask.intent('SleepIntent', convert={'timeAwake': 'time', 'cycles': int}, default={'cycles': 0})
+def timeToSleep(timeAwake, cycles):
+    cycleList = []
     outputString = '<speak>'
 
-    if convert_errors or not isinstance(timeSleep, datetime.time):
+    if convert_errors or not isinstance(timeAwake, datetime.time):
         return question("Please repeat your request")
 
-    timeSleep = datetime.datetime.combine(datetime.date.today(), timeSleep)
-    for i in [5, 6]:
-  
-        timeToSleep = getFinalTime(i, -1, timeSleep)
+    cycleList = limitCycles(cycles)
 
-        hour = datetime.datetime.strftime(timeToSleep, "%-I")
-        minute = datetime.datetime.strftime(timeToSleep, "%M")
+    timeAwake = datetime.datetime.combine(datetime.date.today(), timeAwake)
+    
+    wakeHour = datetime.datetime.strftime(timeAwake, "%-I")
+    wakeMinute = datetime.datetime.strftime(timeAwake, "%M")
+
+    for i in cycleList:
+  
+        timeToSleep = getFinalTime(i, -1, timeAwake)
+
+        sleepHour = datetime.datetime.strftime(timeToSleep, "%-I")
+        sleepMinute = datetime.datetime.strftime(timeToSleep, "%M")
 
         outputString += 'For {} cycles go to bed at {}'\
-            '<break strength="medium"/>{} {}'\
-            '<break strength="strong"/>'\
-            .format(i, hour, minute, getTimeOfDay(timeToSleep))
-
+            '<break strength="medium"/>{} {} to wake up at'\
+            '{}<break strength="medium"/>{}<break strength="strong"/>'\
+            .format(i, sleepHour, sleepMinute, getTimeOfDay(timeToSleep), wakeHour, wakeMinute)
 
 
     outputString += '</speak>'
