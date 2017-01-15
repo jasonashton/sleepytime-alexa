@@ -1,0 +1,17 @@
+WakeupIntent wakeup times
+WakeupIntent what time to wake up
+WakeupIntent time for wakeup
+WakeupIntent what time I should wake up
+WakeupIntent when should I wake up
+WakeupIntent list wakeup times
+WakeupIntent what time is it in {cycles} cycles
+WakeupIntent {cycles} cycles
+WakeupIntent sleep for {cycles} cycles
+WakeupIntent going to sleep now for {cycles} cycles
+
+
+SleepIntent what time should I go to sleep if I wake up at {timeAwake}
+SleepIntent waking up at {timeAwake}
+SleepIntent I wake up at {timeAwake}
+SleepIntent time to sleep for {timeAwake}
+SleepIntent sleep for {cycles} cycles and wake up at {timeAwake}

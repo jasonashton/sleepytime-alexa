@@ -1,0 +1,26 @@
+{
+  "intents": [
+    {
+      "intent": "WakeupIntent",
+      "slots": [
+        {
+          "name": "cycles",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "SleepIntent",
+      "slots": [
+        {
+          "name": "timeAwake",
+          "type": "AMAZON.TIME"
+        },
+        {
+          "name": "cycles",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    }
+  ]
+}
