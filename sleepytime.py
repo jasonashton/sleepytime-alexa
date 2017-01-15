@@ -20,18 +20,21 @@ def getFinalTime(cycles, direction, startTime=None):
 
 @ask.launch
 def launch():
-    speech_text = 'Welcome to the SleepyTime App. Repeat wakeup times'
+    speech_text = 'Welcome to the SleepyTime App. Please ask'\
+                    'for the time to wake up if you sleep now'\
+                    'or ask for what time to sleep if you for'\
+                    'a wakeup time'
     return question(speech_text)
 
-@ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': None})
+@ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': 0})
 def wakeup(cycles):
     cycleList = []
     outputString = '<speak>'
 
-    if 'cycles' in convert_errors:
+    if convert_errors or not isinstance(cycles, int):
         return question("Please repeat your request")
 
-    if cycles is None:
+    if cycles == 0:
         cycleList = [5, 6]
     else:
         if cycles > 23:
@@ -55,7 +58,7 @@ def wakeup(cycles):
 def timeToSleep(timeSleep):
     outputString = '<speak>'
 
-    if 'timeSleep' in convert_errors:
+    if convert_errors or not isinstance(cycles, int):
         return question("Please repeat your request")
 
     timeSleep = datetime.datetime.combine(datetime.date.today(), timeSleep)
