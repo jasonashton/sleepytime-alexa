@@ -38,6 +38,11 @@ def limitCycles(cyclesIn):
         cycleList = [cyclesIn]
     return cycleList
 
+def oClock(minutes):
+    if minutes == '00':
+        minutes = 'o clock'
+    return minutes
+
 
 @ask.launch
 def launch():
@@ -69,6 +74,7 @@ def wakeup(cycles):
 
         hour = datetime.datetime.strftime(wakeupTime, "%-I")
         minute = datetime.datetime.strftime(wakeupTime, "%M")
+        minute = oClock(minute)
 
         outputString += 'For {} sleep cycles wake up at {}'\
             '<break strength="medium"/>{} {}'\
@@ -99,6 +105,7 @@ def timeToSleep(timeAwake, cycles):
     
     wakeHour = datetime.datetime.strftime(timeAwake, "%-I")
     wakeMinute = datetime.datetime.strftime(timeAwake, "%M")
+    wakeMinute = oClock(wakeMinute)
 
     for i in cycleList:
   
@@ -106,6 +113,7 @@ def timeToSleep(timeAwake, cycles):
 
         sleepHour = datetime.datetime.strftime(timeToSleep, "%-I")
         sleepMinute = datetime.datetime.strftime(timeToSleep, "%M")
+        sleepMinute = oClock(sleepMinute)
 
         outputString += 'For {} sleep cycles go to bed at {}'\
             '<break strength="medium"/>{} {}, if you wake up at'\
