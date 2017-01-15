@@ -41,18 +41,23 @@ def limitCycles(cyclesIn):
 
 @ask.launch
 def launch():
-    speech_text = '<speak>Welcome to SleepyTime. Please say you are going'\
+    speech_text = '<speak>Welcome to SleepyTime. Please say you are going '\
                     'to sleep now'\
                     '<break strength="medium" />or<break strength="medium"/>'\
-                    'say the time you are waking up.'\
-                    'you may also specify the number of sleep cycles</speak>'
-    return question(speech_text)
+                    'say the time you are waking up. '\
+                    'You may also specify the number of sleep cycles</speak>'
+    return question(speech_text).simple_card(title='Welcome to Sleepy Time', content=\
+            'Sleep cycles are in 1.5 hour increments with 14 minutes for '\
+            'falling asleep. '
+            'Try saying "I wake up at eight" or "going to sleep now for 5 cycles "'\
+            'or "what time should I wake up".')
 
 #INTENDED IF SLEEPING NOW
 @ask.intent('WakeupIntent', convert={'cycles': int}, default={'cycles': 0})
 def wakeup(cycles):
     cycleList = []
     outputString = '<speak>'
+    cardString = ''
 
     if convert_errors or not isinstance(cycles, int):
         return question("Please repeat your request")
@@ -70,14 +75,20 @@ def wakeup(cycles):
             '<break strength="strong"/>'\
             .format(i, hour, minute, getTimeOfDay(wakeupTime))
 
+        cardString += 'For {} sleep cycles wake up at {}:{} {}. '\
+                .format(i, hour, minute, getTimeOfDay(wakeupTime))
+
     outputString += '</speak>' 
-    return statement(outputString)
+
+    return statement(outputString).simple_card(\
+            title='Goodnight!', content=cardString)
 
 #INTENDED IF YOU KNOW WHEN YOU'RE WAKING UP
 @ask.intent('SleepIntent', convert={'timeAwake': 'time', 'cycles': int}, default={'cycles': 0})
 def timeToSleep(timeAwake, cycles):
     cycleList = []
     outputString = '<speak>'
+    cardString = ''
 
     if convert_errors or not isinstance(timeAwake, datetime.time):
         return question("Please repeat your request")
@@ -97,13 +108,19 @@ def timeToSleep(timeAwake, cycles):
         sleepMinute = datetime.datetime.strftime(timeToSleep, "%M")
 
         outputString += 'For {} sleep cycles go to bed at {}'\
-            '<break strength="medium"/>{} {} to wake up at'\
+            '<break strength="medium"/>{} {}, if you wake up at'\
             '{}<break strength="medium"/>{}<break strength="strong"/>'\
             .format(i, sleepHour, sleepMinute, getTimeOfDay(timeToSleep), wakeHour, wakeMinute)
 
+        cardString += 'For {} sleep cycles go to bed at '\
+                '{}:{} {} if you wake up at {}:{}. '.format(\
+                i, sleepHour, sleepMinute, getTimeOfDay(timeToSleep),\
+                wakeHour, wakeMinute)
+
 
     outputString += '</speak>'
-    return statement(outputString)
+    return statement(outputString).simple_card(\
+            title='Go to sleep at...', content=cardString)
 
 @ask.session_ended
 def session_ended():
