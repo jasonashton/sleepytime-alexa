@@ -18,6 +18,16 @@ def getFinalTime(cycles, direction, startTime=None):
 
     return finalTime
 
+def getTimeOfDay(time):
+    timeOfDay = ''
+    if (time.hour > 1) and (time.hour < 12):
+        timeOfDay = 'in the morning'
+    elif (time.hour >= 12) and (time.hour < 7):
+        timeOfDay = 'in the afternoon'
+    else:
+        timeOfDay = 'at night'
+    return timeOfDay
+
 @ask.launch
 def launch():
     speech_text = 'Welcome to the SleepyTime App. Please ask'\
@@ -47,9 +57,9 @@ def wakeup(cycles):
         minute = datetime.datetime.strftime(wakeupTime, "%M")
 
         outputString += 'For {} cycles wake up at {}'\
-            '<break strength="medium"/>{} tomorrow'\
+            '<break strength="medium"/>{} {}'\
             '<break strength="strong"/>'\
-            .format(i, hour, minute)
+            .format(i, hour, minute, getTimeOfDay(wakeupTime))
 
     outputString += '</speak>' 
     return statement(outputString)
@@ -58,7 +68,7 @@ def wakeup(cycles):
 def timeToSleep(timeSleep):
     outputString = '<speak>'
 
-    if convert_errors or not isinstance(cycles, int):
+    if convert_errors or not isinstance(timeSleep, datetime.time):
         return question("Please repeat your request")
 
     timeSleep = datetime.datetime.combine(datetime.date.today(), timeSleep)
@@ -69,10 +79,10 @@ def timeToSleep(timeSleep):
         hour = datetime.datetime.strftime(timeToSleep, "%-I")
         minute = datetime.datetime.strftime(timeToSleep, "%M")
 
-        outputString += 'For {} cycles sleep at {}'\
-            '<break strength="medium"/>{} tonight'\
+        outputString += 'For {} cycles go to bed at {}'\
+            '<break strength="medium"/>{} {}'\
             '<break strength="strong"/>'\
-            .format(i, hour, minute)
+            .format(i, hour, minute, getTimeOfDay(timeToSleep))
 
 
 
