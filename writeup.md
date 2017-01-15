@@ -1,4 +1,4 @@
-nspiration
+## Inspiration
 Every night I check an app on my phone on the optimal time to wake up. It does this by calculating sleep cycles in 1.5 hour increments. This is because humans tend to cycle between rapid eye movement and non-rapid eye movement, which translates to light sleep and heavy sleep. Waking up while in a light sleep is much easier than in a heavy sleep and makes you feel better throughout the day. By integrating this functionality into Alexa, I can ask for the time and then ask to set the alarm instead of needing to check different apps.
 
 ## What it does
@@ -12,20 +12,23 @@ You might say:
 > ***Alexa, tell Sleepy Time I am going to sleep now***
 
 to which it would reply
-> For 5 sleep cycles wake up at 8:38 in the morning. For 6 sleep cycles wake up at 10:08 in the morning.
+> _For 5 sleep cycles wake up at 8:38 in the morning. For 6 sleep cycles wake up at 10:08 in the morning._
+
 ---
 You might also say:
 > ***Alexa, tell Sleepy Time I am waking up at 9 tomorrow***
 
 to which it would reply
-> For 5 sleep cycles go to bed at 1:16 at night if you wake up at 9:o clock.
-For 6 sleep cycles go to bed at 11:46 at night if you wake up at 9:o clock
+> _For 5 sleep cycles go to bed at 1:16 at night if you wake up at 9:o clock.
+For 6 sleep cycles go to bed at 11:46 at night if you wake up at 9:o clock_
+
 ---
 Or specify cycle count:
 > ***Alexa, tell Sleepy Time I am sleeping now for 4 cycles***
 
 to which it would reply
->For 4 sleep cycles wake up at 7:16 in the morning.
+>_For 4 sleep cycles wake up at 7:16 in the morning_
+
 ---
 
 There are also convenient "cards" that show up in the Alexa app that give you the information in a visual format. This is useful if you can't want to repeat yourself or provide feedback to Amazon and the developer.
@@ -66,4 +69,3 @@ Interestingly, I also had think a bit about language and how we say things. To g
 
 ## What's next for Sleepy Time Alexa Skill
 The next step is to get submit to the Alexa skill store and use it at home! This will be my first time publishing a program like this and I'm looking forward to it.
-
